@@ -1,1 +1,115 @@
+# /IOTCONNECT Enablement Manifest
+# Schema: https://github.com/avnet-iotconnect/<spec-repo>/blob/main/manifest.schema.json
+# This file is read by the /IOTCONNECT Enablement Directory page builder.
 
+schema_version: "1.0"
+
+# ----------------------------------------------------------------------------
+# REPO-LEVEL METADATA
+# ----------------------------------------------------------------------------
+repo:
+  name: avnet-iotc-mtb-psoc-edge-motion
+  display_name: "/IOTCONNECT PSOC™ Edge DEEPCRAFT™ Motion Demo"
+  tagline: >-
+    Deploys a DEEPCRAFT™ Studio human activity detection model on Infineon
+    PSOC™ Edge MCUs, streaming detected motions (standing, running, walking,
+    sitting, jumping) to /IOTCONNECT over Wi-Fi.
+  status: active
+  license: MIT-style          # placeholder — verify against LICENSE file
+  primary_language: c
+
+  # Single supplier — but the field is still a list for schema consistency
+  # with multi-supplier repos.
+  suppliers:
+    - infineon
+
+  clouds:
+    - aws
+    - azure
+
+  tags:
+    - mcu
+    - edge-ai
+    - deepcraft
+    - motion-sensing
+    - imu
+    - modustoolbox
+
+  # SDK this repo depends on
+  sdk:
+    repo: avnet-iotconnect/avnet-iotc-mtb-sdk
+    name: "/IOTCONNECT ModusToolbox™ SDK"
+
+  # NEW FIELD: derived/forked from an upstream project. Important context
+  # for users to understand what changed and what didn't.
+  upstream:
+    name: "Infineon mtb-example-psoc-edge-ml-deepcraft-deploy-motion"
+    url: "https://github.com/Infineon/mtb-example-psoc-edge-ml-deepcraft-deploy-motion/tree/release-v2.0.0"
+    relationship: derived-from   # forked | derived-from | integrates
+
+  # NEW FIELD: build/IDE info — only meaningful for MCU repos. Optional.
+  toolchain:
+    ide: "ModusToolbox™"
+    ide_version: "v3.7+"
+    compiler: "GNU Arm Embedded GCC v14.2.1"
+    rtos: "FreeRTOS"
+
+  related_repos:
+    - avnet-iotconnect/avnet-iotc-mtb-sdk
+
+# ----------------------------------------------------------------------------
+# BOARDS — target hardware kits (TARGET= values in MTB)
+# ----------------------------------------------------------------------------
+boards:
+  - id: infineon-kit-pse84-ai
+    supplier: infineon
+    display_name: "Infineon PSOC™ Edge E84 AI Kit"
+    target: KIT_PSE84_AI            # MTB build target name
+    soc: "PSOC™ Edge E84 — Arm Cortex-M33 (secure + non-secure) + Cortex-M55"
+    vendor_page_url: "https://www.infineon.com/KIT_PSE84_AI"
+    purchase_url: "https://www.newark.com/infineon/kitpse84aitobo1/ai-eval-kit-32bit-arm-cortex-m55f/dp/49AM4459"
+    status: active
+    tags: [psoc-edge, trustzone, multi-core]
+
+  - id: infineon-kit-pse84-eval-epc2
+    supplier: infineon
+    display_name: "Infineon PSOC™ Edge E84 Evaluation Kit"
+    target: KIT_PSE84_EVAL_EPC2
+    soc: "PSOC™ Edge E84 — Arm Cortex-M33 (secure + non-secure) + Cortex-M55"
+    vendor_page_url: "https://www.infineon.com/KIT_PSE84_EVAL"
+    purchase_url: "https://www.newark.com/infineon/kitpse84evaltobo1/eval-kit-32bit-arm-cortex-m55f/dp/49AM4460"
+    status: active
+    tags: [psoc-edge, trustzone, multi-core]
+
+# ----------------------------------------------------------------------------
+# DEMOS — this repo is a single demo built for two board targets
+# ----------------------------------------------------------------------------
+demos:
+  - id: deepcraft-motion
+    display_name: "DEEPCRAFT™ Human Activity Detection"
+    tagline: >-
+      Runs a DEEPCRAFT™ Studio starter model on the CM55, processes BMI270 IMU
+      data to detect standing/running/walking/sitting/jumping, and streams
+      results plus confidence to /IOTCONNECT via the CM33 non-secure app.
+    runs_on:
+      - infineon-kit-pse84-ai
+      - infineon-kit-pse84-eval-epc2
+    tags: [edge-ai, motion-classification, deepcraft]
+
+    # NEW FIELDS — optional capability metadata. Useful for faceted filtering
+    # ("show me every demo using DEEPCRAFT" or "every demo using an IMU").
+    ml_framework: "DEEPCRAFT™ Studio"
+    ml_model: "Human activity detection starter model"
+    sensors: [bmi270-imu]
+    connectivity: [wifi]
+    architecture: "CM55 runs the ML model; CM33 non-secure handles /IOTCONNECT"
+
+    # NEW FIELD — cloud commands the device responds to. Shown on the demo
+    # card so partners can see what's controllable without reading source.
+    cloud_commands:
+      - name: board-user-led
+        arg_type: "string (on/off)"
+        description: "Turn the board user LED on or off"
+      - name: set-reporting-interval
+        arg_type: "number (ms)"
+        description: "Set telemetry reporting interval (default 2000ms)"
