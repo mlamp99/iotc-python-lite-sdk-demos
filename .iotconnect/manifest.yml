@@ -1,6 +1,8 @@
 # /IOTCONNECT Enablement Manifest
 # Schema: https://github.com/avnet-iotconnect/<spec-repo>/blob/main/manifest.schema.json
 # This file is read by the /IOTCONNECT Enablement Directory page builder.
+# Edit this file when adding/removing boards or demos. Keep taglines short (1-2 sentences max);
+# long-form content lives in READMEs.
 
 schema_version: "1.0"
 
@@ -8,108 +10,427 @@ schema_version: "1.0"
 # REPO-LEVEL METADATA
 # ----------------------------------------------------------------------------
 repo:
-  name: avnet-iotc-mtb-psoc-edge-motion
-  display_name: "/IOTCONNECT PSOC™ Edge DEEPCRAFT™ Motion Demo"
+  name: iotc-python-lite-sdk-demos
+  display_name: "/IOTCONNECT Python Lite SDK Demos"
+  kind: demo-collection
   tagline: >-
-    Deploys a DEEPCRAFT™ Studio human activity detection model on Infineon
-    PSOC™ Edge MCUs, streaming detected motions (standing, running, walking,
-    sitting, jumping) to /IOTCONNECT over Wi-Fi.
-  status: active
-  license: MIT-style          # placeholder — verify against LICENSE file
-  primary_language: c
+    Pre-built guides and demos that use the /IOTCONNECT Python Lite SDK to
+    connect a variety of Linux-class development boards to /IOTCONNECT.
+  status: active            # active | beta | paused | deprecated | archived
+  license: MIT
+  primary_language: python
 
-  # Single supplier — but the field is still a list for schema consistency
-  # with multi-supplier repos.
+  # SDKs/libraries this repo depends on. List in dependency order
+  # (closest to the application first, foundational library last).
+  sdks:
+    - repo: avnet-iotconnect/iotc-python-lite-sdk
+      name: "/IOTCONNECT Python Lite SDK"
+    - repo: avnet-iotconnect/iotc-python-lib
+      name: "/IOTCONNECT Protocol Python Library"
+
+  # Every supplier whose silicon/board appears anywhere in this repo.
+  # Used by the directory page to surface this repo under each supplier's filter.
+  # NOTE: this is what fixes the "multi-supplier repo" problem on the current page.
   suppliers:
-    - infineon
+    - arduino
+    - microchip
+    - nvidia
+    - nxp
+    - raspberry-pi
+    - renesas
+    - st
+    - tria
 
   clouds:
     - aws
     - azure
 
+  # Free-form tags for faceted filtering on the directory page.
   tags:
-    - mcu
+    - python
+    - linux
+    - mpu
     - edge-ai
-    - deepcraft
-    - motion-sensing
-    - imu
-    - modustoolbox
+    - vision-ai
+    - kvs
+    - ble
+    - ota
 
-  # SDK this repo depends on
-  sdk:
-    repo: avnet-iotconnect/avnet-iotc-mtb-sdk
-    name: "/IOTCONNECT ModusToolbox™ SDK"
-
-  # NEW FIELD: derived/forked from an upstream project. Important context
-  # for users to understand what changed and what didn't.
-  upstream:
-    name: "Infineon mtb-example-psoc-edge-ml-deepcraft-deploy-motion"
-    url: "https://github.com/Infineon/mtb-example-psoc-edge-ml-deepcraft-deploy-motion/tree/release-v2.0.0"
-    relationship: derived-from   # forked | derived-from | integrates
-
-  # NEW FIELD: build/IDE info — only meaningful for MCU repos. Optional.
-  toolchain:
-    ide: "ModusToolbox™"
-    ide_version: "v3.7+"
-    compiler: "GNU Arm Embedded GCC v14.2.1"
-    rtos: "FreeRTOS"
-
+  # Cross-references to related repos (shown as "see also" on the repo card).
   related_repos:
-    - avnet-iotconnect/avnet-iotc-mtb-sdk
+    - avnet-iotconnect/iotc-python-lite-sdk
+    - avnet-iotconnect/iotc-python-greengrass-demos
 
 # ----------------------------------------------------------------------------
-# BOARDS — target hardware kits (TARGET= values in MTB)
+# BOARDS — every pre-enabled hardware target in this repo
 # ----------------------------------------------------------------------------
+# `id` is the stable key referenced by demos[].runs_on. Keep it kebab-case and
+# match the repo subdirectory name when possible (makes paths self-explanatory).
 boards:
-  - id: infineon-kit-pse84-ai
-    supplier: infineon
-    display_name: "Infineon PSOC™ Edge E84 AI Kit"
-    target: KIT_PSE84_AI            # MTB build target name
-    soc: "PSOC™ Edge E84 — Arm Cortex-M33 (secure + non-secure) + Cortex-M55"
-    vendor_page_url: "https://www.infineon.com/KIT_PSE84_AI"
-    purchase_url: "https://www.newark.com/infineon/kitpse84aitobo1/ai-eval-kit-32bit-arm-cortex-m55f/dp/49AM4459"
+  - id: arduino-uno-q
+    supplier: arduino
+    display_name: "Arduino Uno Q"
+    path: arduino-uno-q
+    soc: "Arm Cortex-A53 + Cortex-M33F"
+    purchase_url: "https://www.newark.com/arduino/abx00162/uno-q-sbc-2gb-arm-cortex-a53-m33f/dp/59AM1209"
     status: active
-    tags: [psoc-edge, trustzone, multi-core]
 
-  - id: infineon-kit-pse84-eval-epc2
-    supplier: infineon
-    display_name: "Infineon PSOC™ Edge E84 Evaluation Kit"
-    target: KIT_PSE84_EVAL_EPC2
-    soc: "PSOC™ Edge E84 — Arm Cortex-M33 (secure + non-secure) + Cortex-M55"
-    vendor_page_url: "https://www.infineon.com/KIT_PSE84_EVAL"
-    purchase_url: "https://www.newark.com/infineon/kitpse84evaltobo1/eval-kit-32bit-arm-cortex-m55f/dp/49AM4460"
+  - id: microchip-pic64gx1000
+    supplier: microchip
+    display_name: "Microchip Curiosity PIC64GX1000 Kit"
+    path: microchip-pic64gx1000
+    soc: "PIC64GX1000 — 64-bit RISC-V Quad"
+    purchase_url: "https://www.newark.com/microchip/curiosity-pic64gx1000-kit/curiosity-kit-64bit-risc-v-quad/dp/46AM3917"
     status: active
-    tags: [psoc-edge, trustzone, multi-core]
+    tags: [risc-v]
+
+  - id: microchip-polarfire-soc-dk
+    supplier: microchip
+    display_name: "Microchip PolarFire SoC Discovery Kit"
+    path: microchip-polarfire-soc-dk
+    soc: "PolarFire SoC — 64-bit RISC-V + FPGA fabric"
+    purchase_url: "https://www.newark.com/microchip/mpfs-disco-kit/discovery-kit-64bit-risc-v-polarfire/dp/97AK2474"
+    status: active
+    tags: [risc-v, fpga, ml-acceleration]
+
+  - id: microchip-polarfire-soc-vk
+    supplier: microchip
+    display_name: "Microchip PolarFire SoC Video Kit"
+    path: microchip-polarfire-soc-vk
+    soc: "PolarFire SoC — 64-bit RISC-V + FPGA fabric"
+    status: active
+    tags: [risc-v, fpga, ml-acceleration, video]
+
+  - id: microchip-sama5d27
+    supplier: microchip
+    display_name: "Microchip ATSAMA5D27-SOM1"
+    path: microchip-sama5d27
+    soc: "SAMA5D27 — Arm Cortex-A5"
+    purchase_url: "https://www.newark.com/microchip/atsama5d27-som1-ek1/eval-board-32bit-mpu-arm-cortex/dp/44AC2213"
+    status: active
+
+  - id: microchip-sama7d65-curiosity
+    supplier: microchip
+    display_name: "Microchip SAMA7D65 Curiosity Kit"
+    path: microchip-sama7d65-curiosity
+    soc: "SAMA7D65 — Arm Cortex-A7"
+    purchase_url: "https://www.newark.com/microchip/ev63j76a/development-kit-arm-cortex-a7/dp/46AM2853"
+    status: active
+    tags: [audio-ai, power-monitoring]
+
+  - id: nvidia-jetson-orin
+    supplier: nvidia
+    display_name: "NVIDIA Jetson Orin NX"
+    path: nvidia-jetson-orin
+    soc: "Jetson Orin NX"
+    purchase_url: "https://www.newark.com/seeed-studio/110110144/recomputer-j4011-edge-ai-device/dp/74AK7856"
+    status: active
+    tags: [gpu, edge-ai]
+
+  - id: nxp-frdm-imx-93
+    supplier: nxp
+    display_name: "NXP FRDM-IMX93"
+    path: nxp-frdm-imx-93
+    soc: "i.MX 93 — Arm Cortex-A55 + Cortex-M33"
+    purchase_url: "https://www.newark.com/nxp/frdm-imx93/dev-brd-64bit-arm-cortex-a55-m33/dp/20AM9538"
+    status: active
+    tags: [npu, eiq]
+
+  - id: nxp-s32g-vnp-gldbox3
+    supplier: nxp
+    display_name: "NXP GoldBox 3 Vehicle Networking Development Platform"
+    path: nxp-s32g-vnp-gldbox3
+    soc: "S32G Vehicle Networking Processor"
+    purchase_url: "https://www.newark.com/nxp/s32g-vnp-gldbox/ref-design-board-vehicle-n-w-processor/dp/37AJ9124"
+    status: active
+    tags: [automotive]
+
+  - id: raspberry-pi
+    supplier: raspberry-pi
+    display_name: "Raspberry Pi"
+    path: raspberry-pi
+    soc: "BCM2712 (Pi 5) — Arm Cortex-A76"
+    purchase_url: "https://www.newark.com/raspberry-pi/rpi5-4gb-single/rpi-5-board-2-4ghz-4gb-arm-cortex/dp/81AK1346"
+    status: active
+
+  - id: renesas-rzg3e-evk
+    supplier: renesas
+    display_name: "Renesas RZ/G3E Evaluation Board Kit"
+    path: renesas-rzg3e-evk
+    soc: "RZ/G3E — Arm Cortex-A55 + Cortex-M33"
+    purchase_url: "https://www.newark.com/renesas/rtk9947e57s01000be/eval-kit-arm-cortex-a55-m33-64bit/dp/73AM7397"
+    status: active
+
+  - id: renesas-rzv2h-evk
+    supplier: renesas
+    display_name: "Renesas RZ/V2H EVK"
+    path: renesas-rzv2h-evk
+    soc: "RZ/V2H — Arm Cortex-A55 + DRP-AI accelerator"
+    purchase_url: "https://www.renesas.com/en/design-resources/boards-kits/rz-v2h-evk"
+    status: active
+    tags: [npu, drp-ai, edge-ai]
+
+  - id: stm32mp135f-dk
+    supplier: st
+    display_name: "ST STM32MP135F-DK Discovery Kit"
+    path: stm32mp135f-dk
+    soc: "STM32MP135F — Arm Cortex-A7"
+    purchase_url: "https://www.newark.com/stmicroelectronics/stm32mp135f-dk/discovery-kit-32bit-arm-cortex/dp/68AK9977"
+    status: active
+
+  - id: stm32mp157f-dk2
+    supplier: st
+    display_name: "ST STM32MP157F-DK2 Discovery Kit"
+    path: stm32mp157f-dk2
+    soc: "STM32MP157F — Arm Cortex-A7 + Cortex-M4"
+    purchase_url: "https://www.newark.com/stmicroelectronics/stm32mp157f-dk2/discovery-board-32bit-arm-cortex/dp/14AJ2731"
+    status: active
+
+  - id: stm32mp215f-dk
+    supplier: st
+    display_name: "ST STM32MP215F-DK Discovery Kit"
+    path: stm32mp215f-dk
+    soc: "STM32MP215F — Arm Cortex-A35 + Cortex-M33"
+    purchase_url: "https://www.avnet.com/americas/product/stmicroelectronics/stm32mp215f-dk/evolve-151041109/"
+    status: active
+
+  - id: stm32mp257f-dk
+    supplier: st
+    display_name: "ST STM32MP257F-DK Evaluation Board"
+    path: stm32mp257f-dk
+    soc: "STM32MP257F — Arm Cortex-A35 + Cortex-M33"
+    purchase_url: "https://www.newark.com/stmicroelectronics/stm32mp257f-dk/discovery-board-arm-cortex-a35/dp/21AM3759"
+    datasheet_url: "https://www.st.com/resource/en/user_manual/um3385-discovery-kit-with-stm32mp257f-mpu-stmicroelectronics.pdf"
+    vendor_page_url: "https://www.st.com/en/evaluation-tools/stm32mp257f-dk.html"
+    status: active
+
+  - id: stm32mp257f-ev1
+    supplier: st
+    display_name: "ST STM32MP257F-EV1 Evaluation Board"
+    path: stm32mp257f-ev1
+    soc: "STM32MP257F — Arm Cortex-A35 + Cortex-M33 + Cortex-M0"
+    purchase_url: "https://www.newark.com/stmicroelectronics/stm32mp257f-ev1/eval-brd-arm-cortex-a35-m33-m0/dp/13AM6530"
+    status: active
+
+  - id: tria-maaxboard-8m
+    supplier: tria
+    display_name: "Tria MaaXBoard 8M"
+    path: tria-maaxboard-8m
+    soc: "i.MX 8M — Arm Cortex-A53 + Cortex-M4F"
+    purchase_url: "https://www.newark.com/avnet/aes-mc-sbc-imx8m-g/sbc-i-mx-8m-arm-cortex-a53-m4f/dp/70AH4311"
+    status: active
+
+  - id: tria-maaxboard-8ulp
+    supplier: tria
+    display_name: "Tria MaaXBoard 8ULP"
+    path: tria-maaxboard-8ulp
+    soc: "i.MX 8ULP"
+    purchase_url: "https://www.newark.com/avnet/aes-maaxb-8ulp-sk-g/maaxboard-8ulp-sbc-arm-cortex/dp/87AK5106"
+    status: active
+
+  - id: tria-maaxboard-osm93
+    supplier: tria
+    display_name: "Tria MaaXBoard OSM93"
+    path: tria-maaxboard-osm93
+    soc: "i.MX 93 OSM — Arm Cortex-A55 + Cortex-M33"
+    purchase_url: "https://www.newark.com/avnet/aes-maaxb-osm93-dk-g/maaxboard-som-arm-cortex-a55-m33/dp/25AM3171"
+    status: active
+
+  - id: tria-vision-ai-kit-6490
+    supplier: tria
+    display_name: "Tria Vision AI-KIT 6490"
+    path: tria-vision-ai-kit-6490
+    soc: "Qualcomm QCS6490 — Arm Cortex-A55 + Cortex-A78"
+    purchase_url: "https://www.newark.com/avnet/sm2-sk-qcs6490-ep6-kit001/dev-kit-64bit-arm-cortex-a55-a78/dp/51AM9843"
+    status: active
+    tags: [npu, vision-ai, qualcomm]
+
+  - id: tria-zuboard-1cg
+    supplier: tria
+    display_name: "Tria ZUBOARD-1CG"
+    path: tria-zuboard-1cg
+    soc: "Zynq UltraScale+ MPSoC — Arm Cortex-A53 + FPGA"
+    purchase_url: "https://www.newark.com/avnet/aes-zub-1cg-dk-g/development-board-arm-cortex-a53/dp/41AK2454"
+    status: active
+    tags: [fpga, xilinx]
 
 # ----------------------------------------------------------------------------
-# DEMOS — this repo is a single demo built for two board targets
+# DEMOS — each demo is described once, then referenced against board IDs.
+# This is what eliminates duplication when one demo runs on many boards.
 # ----------------------------------------------------------------------------
 demos:
-  - id: deepcraft-motion
-    display_name: "DEEPCRAFT™ Human Activity Detection"
+  - id: starter-demo
+    display_name: "/IOTCONNECT Starter Demo"
     tagline: >-
-      Runs a DEEPCRAFT™ Studio starter model on the CM55, processes BMI270 IMU
-      data to detect standing/running/walking/sitting/jumping, and streams
-      results plus confidence to /IOTCONNECT via the CM33 non-secure app.
+      Basic telemetry and cloud-to-device command app — the starting point
+      for every supported board.
+    path: common/starter-demo
+    runs_on: all          # special value: every board in this manifest
+    tags: [basic, telemetry, c2d]
+
+  - id: eiq-dms
+    display_name: "EIQ Vision AI Driver Monitoring System (DMS)"
+    tagline: >-
+      Uses NXP eIQ Vision AI to analyze a live camera feed for driver safety
+      indicators — eye state, head pose, drowsiness — and streams the results
+      to /IOTCONNECT.
     runs_on:
-      - infineon-kit-pse84-ai
-      - infineon-kit-pse84-eval-epc2
-    tags: [edge-ai, motion-classification, deepcraft]
+      - nxp-frdm-imx-93
+      - tria-maaxboard-osm93
+    tags: [edge-ai, vision-ai, dms]
 
-    # NEW FIELDS — optional capability metadata. Useful for faceted filtering
-    # ("show me every demo using DEEPCRAFT" or "every demo using an IMU").
-    ml_framework: "DEEPCRAFT™ Studio"
-    ml_model: "Human activity detection starter model"
-    sensors: [bmi270-imu]
-    connectivity: [wifi]
-    architecture: "CM55 runs the ML model; CM33 non-secure handles /IOTCONNECT"
+  - id: dms-plus-face-recog
+    display_name: "DMS + Face Recognition"
+    tagline: >-
+      Adds face-recognition to the EIQ DMS pipeline for driver identification.
+    runs_on:
+      - nxp-frdm-imx-93
+    tags: [edge-ai, vision-ai, dms, face-recognition]
 
-    # NEW FIELD — cloud commands the device responds to. Shown on the demo
-    # card so partners can see what's controllable without reading source.
-    cloud_commands:
-      - name: board-user-led
-        arg_type: "string (on/off)"
-        description: "Turn the board user LED on or off"
-      - name: set-reporting-interval
-        arg_type: "number (ms)"
-        description: "Set telemetry reporting interval (default 2000ms)"
+  - id: xlinuxai-object-detection
+    display_name: "X-LINUX-AI Object Detection"
+    tagline: >-
+      On-device 80-class object detection using ST's X-LINUX-AI software stack,
+      with confidence scores streamed to /IOTCONNECT roughly once per second.
+    runs_on:
+      - stm32mp135f-dk
+      - stm32mp157f-dk2
+    tags: [edge-ai, vision-ai, st-software]
+
+  - id: mkboxpro-ble
+    display_name: "MKBOXPRO BLE Sensor Pack"
+    tagline: >-
+      Streams motion, environmental, and audio telemetry from a SensorTile.box
+      PRO over BLE to /IOTCONNECT.
+    runs_on:
+      - stm32mp135f-dk
+      - stm32mp157f-dk2
+      - stm32mp257f-dk
+    tags: [ble, sensors, st-software]
+
+  - id: proteus-sensor-pack
+    display_name: "PROTEUS Sensor Pack"
+    tagline: >-
+      Streams temperature, humidity, pressure, and other environmental telemetry
+      from a PROTEUS sensor pack to /IOTCONNECT.
+    runs_on:
+      - stm32mp135f-dk
+      - stm32mp157f-dk2
+      - stm32mp257f-dk
+    tags: [sensors, environmental]
+
+  - id: file-upload
+    display_name: "File Upload Demo"
+    tagline: >-
+      Captures pictures and video clips from a USB camera and uploads them to
+      the /IOTCONNECT file-support S3 bucket via cloud command.
+    runs_on:
+      - nxp-frdm-imx-93
+    tags: [s3, file-upload, ota]
+
+  - id: fpga-ml-template-classifier
+    display_name: "FPGA ML: Template Correlation Classifier"
+    tagline: >-
+      Deterministic 256-sample waveform classifier using dot-product templates
+      on the PolarFire SoC FPGA — establishes the performance baseline before
+      neural-network models.
+    runs_on:
+      - microchip-polarfire-soc-dk
+      - microchip-polarfire-soc-vk
+    tags: [edge-ai, fpga, ml-acceleration]
+
+  - id: fpga-ml-simple-nn
+    display_name: "FPGA ML: Simple Neural Network Accelerator"
+    tagline: >-
+      Compact fixed-point NN (256 → 12 → 6) running in PolarFire SoC FPGA fabric
+      with hardware vs. software performance comparison.
+    runs_on:
+      - microchip-polarfire-soc-dk
+      - microchip-polarfire-soc-vk
+    tags: [edge-ai, fpga, ml-acceleration]
+
+  - id: fpga-ml-complex-nn
+    display_name: "FPGA ML: Complex Neural Network Accelerator"
+    tagline: >-
+      Two-hidden-layer NN (~11K weights) with batch-aware DMA on PolarFire SoC,
+      showing the strongest FPGA acceleration advantage in the series.
+    runs_on:
+      - microchip-polarfire-soc-dk
+      - microchip-polarfire-soc-vk
+    tags: [edge-ai, fpga, ml-acceleration]
+
+  - id: drp-ai-inference
+    display_name: "Renesas DRP-AI Inference"
+    tagline: >-
+      Runs OpenCV face/body detection plus 14 pre-built Renesas AI SDK demos on
+      the RZ/V2H's DRP-AI accelerator, with cloud-controlled demo switching.
+    runs_on:
+      - renesas-rzv2h-evk
+    tags: [edge-ai, drp-ai, vision-ai]
+
+  - id: tria-vision-ai
+    display_name: "Tria Vision AI"
+    tagline: >-
+      Pose detection, object detection, and image classification on the Vision
+      AI-KIT 6490, with dual-camera support for two simultaneous models.
+    runs_on:
+      - tria-vision-ai-kit-6490
+    tags: [edge-ai, vision-ai, qualcomm]
+
+  - id: kws-demo
+    display_name: "Keyword Spotting Demo"
+    tagline: >-
+      TensorFlow Lite DS-CNN speech-command classifier on a USB mic, with OTA
+      model swapping from the Arm ML Zoo.
+    runs_on:
+      - microchip-sama7d65-curiosity
+    tags: [edge-ai, audio-ai, ota]
+
+  - id: kws-game
+    display_name: "Voice Blackjack (KWS Game)"
+    tagline: >-
+      Browser-hosted blackjack game controlled by voice commands using the same
+      KWS pipeline; game state and inference results stream to /IOTCONNECT.
+    runs_on:
+      - microchip-sama7d65-curiosity
+    tags: [edge-ai, audio-ai, demo-app]
+
+  - id: pac1934-power
+    display_name: "PAC1934 Power Monitoring"
+    tagline: >-
+      Reads voltage, current, and power from the on-board PAC1934 four-channel
+      DC power monitor over I2C and publishes to /IOTCONNECT.
+    runs_on:
+      - microchip-sama7d65-curiosity
+    tags: [power-monitoring, sensors]
+
+  - id: kvs-putmedia
+    display_name: "AWS KVS PutMedia"
+    tagline: >-
+      Streams stored video to AWS Kinesis Video Streams for later playback in
+      the /IOTCONNECT dashboard (5–15s latency; suited to security/recording).
+    cloud: aws
+    runs_on:
+      - nvidia-jetson-orin
+      - nxp-frdm-imx-93
+      - stm32mp135f-dk
+      - stm32mp157f-dk2
+      - stm32mp257f-dk
+      - stm32mp257f-ev1
+      - tria-vision-ai-kit-6490
+    tags: [aws, kvs, video-streaming]
+
+  - id: kvs-webrtc
+    display_name: "AWS KVS WebRTC"
+    tagline: >-
+      Peer-to-peer video from device to browser via KVS signaling for sub-second
+      latency real-time monitoring (no stored playback).
+    cloud: aws
+    runs_on:
+      - nxp-frdm-imx-93
+      - stm32mp135f-dk
+      - stm32mp157f-dk2
+      - stm32mp257f-dk
+      - stm32mp257f-ev1
+      - tria-vision-ai-kit-6490
+    tags: [aws, kvs, video-streaming, webrtc]
