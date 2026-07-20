@@ -297,6 +297,17 @@ demos:
       - stm32mp157f-dk2
     tags: [edge-ai, vision-ai, st-software]
 
+  - id: deepx-clip-ai-vision
+    display_name: "Ask the Camera — DEEPX DX-M1 CLIP Vision"
+    tagline: >-
+      Cloud-reprogrammable AI vision: the CLIP vision-language model runs on the
+      DEEPX DX-M1 M.2 NPU and scores the live camera feed against plain-English
+      prompts sent from the /IOTCONNECT dashboard — no retraining, no redeploy.
+    path: raspberry-pi/deepx-clip-ai-vision
+    runs_on:
+      - raspberry-pi
+    tags: [edge-ai, vision-ai, clip, deepx, npu]
+
   - id: mkboxpro-ble
     display_name: "MKBOXPRO BLE Sensor Pack"
     tagline: >-
